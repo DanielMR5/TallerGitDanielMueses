@@ -6,8 +6,8 @@
     <title>Convertir Número a Letras</title>
 
     <!-- Vinculación de Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRzCv6QZtt2eF6XZL5zVxWdhHxD8V9+UzgE9B5tTm" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-vjsK5tL0Qdy1ChSYzD5QmDlvK+RmthtsGVqB2jUIgnzVy+mheEy+rTdA6/zr2fjJ" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRzCv6QZtt2eF6XZL5zVxWdhHxD8V9+UzgE9B5tTm" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-vjsK5tL0Qdy1ChSYzD5QmDlvK+RmthtsGVqB2jUIgnzVy+mheEy+rTdA6/zr2fjJ" crossorigin="anonymous"></script>
 
     <!-- Estilos personalizados -->
     <style>
@@ -56,6 +56,11 @@
         .btn-translate:hover {
             background-color: #0056b3;
         }
+        .alert-translate {
+            background-color: #e2e3e5;
+            color: #383d41;
+            border-radius: 8px;
+        }
     </style>
 </head>
 <body>
@@ -79,17 +84,23 @@
                         </div>
                     </div>
 
-                    <!-- Resultado -->
+                    <!-- Resultado en Español -->
                     <div class="resultado">
-                        <h2>Resultado:</h2>
+                        <h2>Resultado en Español:</h2>
                         <p id="resultado" class="alert alert-info">El resultado aparecerá aquí</p>
                     </div>
 
-                    <!-- Botón para traducir a inglés (nuevo) -->
+                    <!-- Botón para traducir a inglés -->
                     <div class="row mt-3">
                         <div class="col-12 text-center">
                             <button class="btn btn-translate" onclick="traducirAlIngles()">Traducir a Inglés</button>
                         </div>
+                    </div>
+
+                    <!-- Resultado en Inglés -->
+                    <div class="resultado">
+                        <h2>Resultado en Inglés:</h2>
+                        <p id="resultadoIngles" class="alert alert-translate">La traducción aparecerá aquí</p>
                     </div>
                 </div>
             </div>
@@ -163,6 +174,7 @@
             }
             const resultado = numeroALetras(numero);
             document.getElementById("resultado").innerText = resultado;
+            document.getElementById("resultadoIngles").innerText = ''; // Limpiar resultado en inglés
         }
 
         function traducirAlIngles() {
@@ -171,32 +183,66 @@
                 alert("Primero debes convertir un número.");
                 return;
             }
-            // Ejemplo de traducción al inglés (esto se puede mejorar con traducciones más avanzadas)
-            const traducciones = {
-                'cero': 'zero',
-                'uno': 'one',
-                'dos': 'two',
-                'tres': 'three',
-                'cuatro': 'four',
-                'cinco': 'five',
-                'seis': 'six',
-                'siete': 'seven',
-                'ocho': 'eight',
-                'nueve': 'nine',
-                'diez': 'ten',
-                'cien': 'hundred',
-                'mil': 'thousand',
-                'millón': 'million'
-            };
 
-            let textoIngles = textoEsp;
-            for (let [key, value] of Object.entries(traducciones)) {
-                textoIngles = textoIngles.replace(new RegExp(key, 'g'), value);
+            // Traducción completa al inglés
+            function numeroAIngles(num) {
+                const unidades = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+                const decenas = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+                const especiales = ['ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+                const centenas = ['one hundred', 'two hundred', 'three hundred', 'four hundred', 'five hundred', 'six hundred', 'seven hundred', 'eight hundred', 'nine hundred'];
+
+                if (num === 0) return 'zero';
+
+                let result = '';
+
+                function convertirCentenas(n) {
+                    let res = '';
+                    if (n >= 100) {
+                        res += centenas[Math.floor(n / 100) - 1] + ' ';
+                        n = n % 100;
+                    }
+                    if (n >= 20) {
+                        res += decenas[Math.floor(n / 10)] + (n % 10 > 0 ? '-' + unidades[n % 10] : '');
+                    } else if (n >= 10) {
+                        res += especiales[n - 10];
+                    } else if (n > 0) {
+                        res += unidades[n];
+                    }
+                    return res.trim();
+                }
+
+                function convertirSeccion(num, divisor, singular, plural) {
+                    let cientos = Math.floor(num / divisor);
+                    let resto = num - (cientos * divisor);
+
+                    let palabras = '';
+                    if (cientos > 0) {
+                        palabras = cientos > 1 ? convertirCentenas(cientos) + ' ' + plural : singular;
+                    }
+                    if (resto > 0) {
+                        palabras += (palabras ? ' and ' : '') + numeroAIngles(resto);
+                    }
+                    return palabras;
+                }
+
+                const millones = Math.floor(num / 1000000);
+                num = num - (millones * 1000000);
+
+                const miles = Math.floor(num / 1000);
+                num = num - (miles * 1000);
+
+                result = convertirSeccion(millones, 1000000, 'one million', 'millions') +
+                         (result ? ' ' : '') +
+                         convertirSeccion(miles, 1000, 'one thousand', 'thousand') +
+                         (result ? ' ' : '') +
+                         convertirCentenas(num);
+
+                return result.trim();
             }
 
-            alert("Traducción al inglés: " + textoIngles);
+            const resultadoIngles = numeroAIngles(parseInt(document.getElementById("numero").value));
+            document.getElementById("resultadoIngles").innerText = resultadoIngles;
         }
     </script>
 </body>
 </html>
-
