@@ -6,8 +6,8 @@
     <title>Convertir Número a Letras</title>
 
     <!-- Vinculación de Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRzCv6QZtt2eF6XZL5zVxWdhHxD8V9+UzgE9B5tTm" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-vjsK5tL0Qdy1ChSYzD5QmDlvK+RmthtsGVqB2jUIgnzVy+mheEy+rTdA6/zr2fjJ" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRzCv6QZtt2eF6XZL5zVxWdhHxD8V9+UzgE9B5tTm" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-vjsK5tL0Qdy1ChSYzD5QmDlvK+RmthtsGVqB2jUIgnzVy+mheEy+rTdA6/zr2fjJ" crossorigin="anonymous"></script>
 
     <!-- Estilos personalizados -->
     <style>
@@ -48,6 +48,14 @@
         .resultado {
             margin-top: 20px;
         }
+        .btn-translate {
+            background-color: #007bff;
+            color: white;
+            border-radius: 8px;
+        }
+        .btn-translate:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -76,12 +84,19 @@
                         <h2>Resultado:</h2>
                         <p id="resultado" class="alert alert-info">El resultado aparecerá aquí</p>
                     </div>
+
+                    <!-- Botón para traducir a inglés (nuevo) -->
+                    <div class="row mt-3">
+                        <div class="col-12 text-center">
+                            <button class="btn btn-translate" onclick="traducirAlIngles()">Traducir a Inglés</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Script para convertir el número -->
+    <!-- Script para convertir el número y traducir -->
     <script>
         function numeroALetras(num) {
             const unidades = ['cero', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve'];
@@ -149,6 +164,39 @@
             const resultado = numeroALetras(numero);
             document.getElementById("resultado").innerText = resultado;
         }
+
+        function traducirAlIngles() {
+            const textoEsp = document.getElementById("resultado").innerText;
+            if (textoEsp === 'El resultado aparecerá aquí' || textoEsp === '') {
+                alert("Primero debes convertir un número.");
+                return;
+            }
+            // Ejemplo de traducción al inglés (esto se puede mejorar con traducciones más avanzadas)
+            const traducciones = {
+                'cero': 'zero',
+                'uno': 'one',
+                'dos': 'two',
+                'tres': 'three',
+                'cuatro': 'four',
+                'cinco': 'five',
+                'seis': 'six',
+                'siete': 'seven',
+                'ocho': 'eight',
+                'nueve': 'nine',
+                'diez': 'ten',
+                'cien': 'hundred',
+                'mil': 'thousand',
+                'millón': 'million'
+            };
+
+            let textoIngles = textoEsp;
+            for (let [key, value] of Object.entries(traducciones)) {
+                textoIngles = textoIngles.replace(new RegExp(key, 'g'), value);
+            }
+
+            alert("Traducción al inglés: " + textoIngles);
+        }
     </script>
 </body>
 </html>
+
