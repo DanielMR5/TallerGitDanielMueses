@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convertir Número a Letras</title>
+    <script>
+        function numeroALetras(num) {
+            const unidades = ['cero', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve'];
+            const decenas = ['diez', 'once', 'doce', 'trece', 'catorce', 'quince', 'dieciséis', 'diecisiete', 'dieciocho', 'diecinueve'];
+            const decenas2 = ['', '', 'veinte', 'treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa'];
+            const centenas = ['', 'ciento', 'doscientos', 'trescientos', 'cuatrocientos', 'quinientos', 'seiscientos', 'setecientos', 'ochocientos', 'novecientos'];
+
+            if (num === 0) return 'cero';
+            if (num < 0) return 'menos ' + numeroALetras(Math.abs(num));
+
+            let resultado = '';
+            
+            function convertirCentenas(n) {
+                let res = '';
+                if (n >= 100) {
+                    if (n === 100) return 'cien';
+                    res += centenas[Math.floor(n / 100)] + ' ';
+                    n = n % 100;
+                }
+                if (n >= 20) {
+                    res += decenas2[Math.floor(n / 10)] + (n % 10 > 0 ? ' y ' + unidades[n % 10] : '');
+                } else if (n >= 10) {
+                    res += decenas[n - 10];
+                } else if (n > 0) {
+                    res += unidades[n];
+                }
+                return res.trim();
+            }
+
+            function convertirSeccion(num, divisor, singular, plural) {
+                let cientos = Math.floor(num / divisor);
+                let resto = num - cientos * divisor;
+
+                let palabras = '';
+                if (cientos > 0) {
+                    palabras = cientos > 1 ? convertirCentenas(cientos) + ' ' + plural : singular;
+                }
+                if (resto > 0) {
+                    palabras += (palabras ? ' ' : '') + numeroALetras(resto);
+                }
+                return palabras;
+            }
+
+            const millones = Math.floor(num / 1000000);
+            num = num - (millones * 1000000);
+
+            const miles = Math.floor(num / 1000);
+            num = num - (miles * 1000);
+
+            resultado = convertirSeccion(millones, 1, 'un millón', 'millones') +
+                        (resultado ? ' ' : '') +
+                        convertirSeccion(miles, 1, 'mil', 'mil') +
+                        (resultado ? ' ' : '') +
+                        convertirCentenas(num);
+
+            return resultado.trim();
+        }
+
+        function convertirNumero() {
+            const numero = parseInt(document.getElementById("numero").value);
+            const resultado = numeroALetras(numero);
+            document.getElementById("resultado").innerText = resultado;
+        }
+    </script>
+</head>
+<body>
+    <h1>Convertir Número a Letras</h1>
+    <p>Introduce un número:</p>
+    <input type="number" id="numero" placeholder="Escribe un número">
+    <button onclick="convertirNumero()">Convertir</button>
+
+    <h2>Resultado:</h2>
+    <p id="resultado"></p>
+</body>
+</html>
