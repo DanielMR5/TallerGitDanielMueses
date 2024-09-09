@@ -4,6 +4,70 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Convertir Número a Letras</title>
+
+    <!-- Vinculación de Bootstrap (agregado en el <head>) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRzCv6QZtt2eF6XZL5zVxWdhHxD8V9+UzgE9B5tTm" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-vjsK5tL0Qdy1ChSYzD5QmDlvK+RmthtsGVqB2jUIgnzVy+mheEy+rTdA6/zr2fjJ" crossorigin="anonymous"></script>
+
+    <!-- Estilos personalizados (agregado) -->
+    <style>
+        body {
+            background-color: #f8f9fa; /* Fondo suave */
+        }
+        .container {
+            margin-top: 50px; /* Margen superior */
+        }
+        .card {
+            padding: 20px; /* Espaciado interior */
+            border-radius: 10px; /* Bordes redondeados */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
+        }
+        .btn-custom {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-custom:hover {
+            background-color: #0056b3; /* Cambio de color en hover */
+        }
+        .resultado {
+            margin-top: 20px; /* Espaciado superior */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Contenedor principal con clases de Bootstrap (modificado) -->
+    <div class="container">
+        <div class="row justify-content-center"> <!-- Centra el contenido -->
+            <div class="col-md-8"> <!-- Ancho de columna -->
+                <div class="card"> <!-- Tarjeta con Bootstrap -->
+                    <h1 class="text-center mb-4">Convertir Número a Letras</h1>
+                    <p class="text-center">Introduce un número y presiona "Convertir" para ver su representación en letras.</p>
+                    
+                    <!-- Formulario con estructura Bootstrap -->
+                    <div class="row mb-4">
+                        <div class="col-md-8">
+                            <!-- Input con clase de Bootstrap -->
+                            <input type="number" id="numero" class="form-control" placeholder="Escribe un número" aria-label="Escribe un número">
+                        </div>
+                        <div class="col-md-4">
+                            <!-- Botón con clase personalizada -->
+                            <button class="btn btn-custom w-100" onclick="convertirNumero()">Convertir</button>
+                        </div>
+                    </div>
+
+                    <!-- Sección del resultado -->
+                    <div class="resultado">
+                        <h2>Resultado:</h2>
+                        <!-- Alerta Bootstrap para el resultado -->
+                        <p id="resultado" class="alert alert-info">El resultado aparecerá aquí</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script para la conversión (sin cambios) -->
     <script>
         function numeroALetras(num) {
             const unidades = ['cero', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve'];
@@ -64,18 +128,13 @@
 
         function convertirNumero() {
             const numero = parseInt(document.getElementById("numero").value);
+            if (isNaN(numero)) {
+                document.getElementById("resultado").innerText = 'Por favor, introduce un número válido.';
+                return;
+            }
             const resultado = numeroALetras(numero);
             document.getElementById("resultado").innerText = resultado;
         }
     </script>
-</head>
-<body>
-    <h1>Convertir Número a Letras</h1>
-    <p>Introduce un número:</p>
-    <input type="number" id="numero" placeholder="Escribe un número">
-    <button onclick="convertirNumero()">Convertir</button>
-
-    <h2>Resultado:</h2>
-    <p id="resultado"></p>
 </body>
 </html>
